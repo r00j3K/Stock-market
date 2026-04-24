@@ -27,8 +27,6 @@ CREATE TABLE audit_logs
     wallet_id VARCHAR(255) NOT NULL,
     stock_name VARCHAR(255) NOT NULL,
     transaction_type transaction_type NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_wallet_id_audit_log FOREIGN KEY(wallet_id) REFERENCES wallets(wallet_id),
-    CONSTRAINT fk_stock_name_audit_log FOREIGN KEY(stock_name) REFERENCES bank_stocks(stock_name)
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
