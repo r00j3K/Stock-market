@@ -1,4 +1,4 @@
-package com.github.r00j3k.simplified_stock_market.entity;
+package com.github.r00j3k.simplified_stock_market.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
