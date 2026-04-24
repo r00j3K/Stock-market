@@ -3,20 +3,21 @@ package com.github.r00j3k.simplified_stock_market.entities;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import com.github.r00j3k.simplified_stock_market.enums.TransactionType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,19 +38,20 @@ public class AuditLog {
     @Column(name = "log_id", nullable = false, updatable = false)
     private Long logId;    
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "wallet_id", nullable = false)
-    private Wallet wallet;
+    @NotBlank
+    @Size(max = 255)
+    @Column(name = "wallet_id", length = 255, nullable = false)
+    private String walletId;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "stock_name", nullable = false)
-    private BankStock bankStock;
+    @NotBlank
+    @Size(max = 255)
+    @Column(name = "stock_name", length = 255, nullable = false)
+    private String stockName;
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "transaction_type", columnDefinition = "transaction_type", nullable = false)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Column(name = "transaction_type", nullable = false)
     private TransactionType transactionType;
 
     @CreationTimestamp
