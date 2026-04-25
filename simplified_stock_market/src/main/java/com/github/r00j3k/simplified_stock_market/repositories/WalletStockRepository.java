@@ -12,7 +12,7 @@ import com.github.r00j3k.simplified_stock_market.entities.WalletStockId;
 import jakarta.persistence.LockModeType;
 
 public interface WalletStockRepository extends JpaRepository<WalletStock, WalletStockId> {
-    List<WalletStock> findAllByWalletWalletId(String walletId);
+    List<WalletStock> findAllByWalletStockIdWalletId(String walletId);
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     Optional<WalletStock> findByIdForUpdate(WalletStockId walletStockId);
 }
