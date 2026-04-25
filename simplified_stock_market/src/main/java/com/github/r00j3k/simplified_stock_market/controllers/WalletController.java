@@ -15,7 +15,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 
-
 @RestController
 @RequestMapping("/wallets")
 @RequiredArgsConstructor
@@ -36,7 +35,15 @@ public class WalletController {
     public ResponseEntity<WalletStocksResponse> getWalletStocks(
         @PathVariable("wallet_id") String walletId
     ){
-        var walletStocks = walletService.getWalletStocks(walletId);
-        return ResponseEntity.ok(walletStocks);
+        return ResponseEntity.ok(walletService.getWalletStocks(walletId));
     }
+
+    @GetMapping("/{wallet_id}/stocks/{stock_name}")
+    public ResponseEntity<Long> getWalletStockQuantity(
+        @PathVariable("wallet_id") String walletId,
+        @PathVariable("stock_name") String stockName
+    ){
+        return ResponseEntity.ok(walletService.getStockQuantity(walletId, stockName));
+    }
+    
 }

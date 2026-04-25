@@ -18,6 +18,7 @@ import com.github.r00j3k.simplified_stock_market.repositories.BankStockRepositor
 import com.github.r00j3k.simplified_stock_market.repositories.WalletRepository;
 import com.github.r00j3k.simplified_stock_market.repositories.WalletStockRepository;
 import com.github.r00j3k.simplified_stock_market.dtos.StockList;
+import com.github.r00j3k.simplified_stock_market.dtos.StockQuantityResponse;
 import com.github.r00j3k.simplified_stock_market.dtos.WalletStocksResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -35,12 +36,8 @@ public class WalletService {
         var transactionType = TransactionType.valueOf(type.toUpperCase());
 
         switch(transactionType){
-            case BUY:
-                buyStock(walletId, stockName);
-                break;
-            case SELL:
-                sellStock(walletId, stockName);
-                break;
+            case BUY -> buyStock(walletId, stockName);
+            case SELL -> sellStock(walletId, stockName);
         }
 
         auditLogRepository.save(
@@ -62,7 +59,7 @@ public class WalletService {
             
         bankStock.setQuantity(bankStock.getQuantity()-1);
 
-        if(walletRepository.findById(walletId).isEmpty()){
+        if(!walletRepository.existsById(walletId)){
             walletRepository.save(
                 Wallet.builder()
                 .walletId(walletId)
@@ -70,19 +67,16 @@ public class WalletService {
             );
         }
             
-        var walletStockOptional = walletStockRepository.findByIdForUpdate(new WalletStockId((walletId), stockName));
-        if(walletStockOptional.isEmpty()){
-            walletStockRepository.save(
-                WalletStock.builder()
+        walletStockRepository.findByIdForUpdate(new WalletStockId((walletId), stockName))
+            .ifPresentOrElse(
+                ws -> ws.setQuantity(ws.getQuantity()+1),
+                () -> walletStockRepository.save(
+                    WalletStock.builder()
                     .walletStockId(new WalletStockId(walletId, stockName))
                     .quantity(1L)
                     .build()
+                )
             );
-        }
-        else {
-            var walletStock = walletStockOptional.get();
-            walletStock.setQuantity(walletStock.getQuantity()+1);
-        }
     }
 
     private void sellStock(String walletId, String stockName){
@@ -107,7 +101,7 @@ public class WalletService {
     }
 
     public WalletStocksResponse getWalletStocks(String walletId){
-        if(walletRepository.findById(walletId).isEmpty()){
+        if(!walletRepository.existsById(walletId)){
             throw new WalletNotFoundException("Wallet not found.");
         }
 
@@ -121,5 +115,15 @@ public class WalletService {
             .toList();
         
         return new WalletStocksResponse(walletId, stockList);
+    }
+
+    public Long getStockQuantity(String walletId, String stockName){
+        if(!walletRepository.existsById(walletId)){
+            throw new WalletNotFoundException("Wallet not found.");
+        }
+
+        return walletStockRepository.findById(new WalletStockId(walletId, stockName))
+            .map(ws -> ws.getQuantity())
+            .orElse(0L);
     }
 }
