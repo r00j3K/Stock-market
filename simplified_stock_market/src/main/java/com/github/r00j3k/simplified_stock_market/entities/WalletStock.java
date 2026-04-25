@@ -41,6 +41,5 @@ public class WalletStock {
     @NotNull
     @Column(name = "quantity", nullable = false)
     @Positive
-    @Builder.Default
-    private Long quantity = 1L;
+    private Long quantity;
 }
