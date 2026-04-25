@@ -8,10 +8,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.r00j3k.simplified_stock_market.dtos.TradeRequest;
+import com.github.r00j3k.simplified_stock_market.dtos.WalletStocksResponse;
 import com.github.r00j3k.simplified_stock_market.services.WalletService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 @RestController
 @RequestMapping("/wallets")
@@ -19,13 +22,21 @@ import lombok.RequiredArgsConstructor;
 public class WalletController {
     private final WalletService walletService;
 
-    @PostMapping("/{walletId}/stocks/{stockName}")
+    @PostMapping("/{wallet_id}/stocks/{stock_name}")
     public ResponseEntity<Void> trade(
-        @PathVariable String walletId,
-        @PathVariable String stockName,
+        @PathVariable("wallet_id") String walletId,
+        @PathVariable("stock_name") String stockName,
         @Valid @RequestBody TradeRequest request
     ){
         walletService.trade(walletId, stockName, request.type());
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{wallet_id}")
+    public ResponseEntity<WalletStocksResponse> getWalletStocks(
+        @PathVariable("wallet_id") String walletId
+    ){
+        var walletStocks = walletService.getWalletStocks(walletId);
+        return ResponseEntity.ok(walletStocks);
     }
 }
