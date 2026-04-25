@@ -1,4 +1,4 @@
-CREATE TYPE transaction_type AS ENUM ('buy', 'sell');
+CREATE TYPE transaction_type AS ENUM ('BUY', 'SELL');
 
 CREATE TABLE wallets 
 (
