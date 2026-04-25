@@ -40,6 +40,5 @@ public class WalletStock {
 
     @NotNull
     @Column(name = "quantity", nullable = false)
-    @Positive
     private Long quantity;
 }
