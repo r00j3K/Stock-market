@@ -15,7 +15,7 @@ CREATE TABLE wallet_stocks
 (
     wallet_id VARCHAR(255) NOT NULL,
     stock_name VARCHAR(255) NOT NULL,
-    quantity BIGINT NOT NULL DEFAULT 1,
+    quantity BIGINT NOT NULL,
     PRIMARY KEY (wallet_id, stock_name),
     CONSTRAINT fk_wallet_id_wallet_stock FOREIGN KEY(wallet_id) REFERENCES wallets(wallet_id),
     CONSTRAINT fk_stock_name_wallet_stock FOREIGN KEY(stock_name) REFERENCES bank_stocks(stock_name)
