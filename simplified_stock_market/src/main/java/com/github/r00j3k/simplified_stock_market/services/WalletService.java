@@ -10,7 +10,6 @@ import com.github.r00j3k.simplified_stock_market.entities.Wallet;
 import com.github.r00j3k.simplified_stock_market.entities.WalletStock;
 import com.github.r00j3k.simplified_stock_market.entities.WalletStockId;
 import com.github.r00j3k.simplified_stock_market.enums.TransactionType;
-import com.github.r00j3k.simplified_stock_market.exceptions.NoStocksException;
 import com.github.r00j3k.simplified_stock_market.exceptions.StockNotAvailableException;
 import com.github.r00j3k.simplified_stock_market.exceptions.StockNotFoundException;
 import com.github.r00j3k.simplified_stock_market.exceptions.WalletNotFoundException;
@@ -113,10 +112,6 @@ public class WalletService {
         }
 
         var walletStocks = walletStockRepository.findAllByWalletStockIdWalletId(walletId);
-
-        if(walletStocks.isEmpty()){
-            throw new NoStocksException("This wallet has no stocks");
-        }
 
         List<StockList> stockList = walletStocks.stream()
             .map(ws -> new StockList(
