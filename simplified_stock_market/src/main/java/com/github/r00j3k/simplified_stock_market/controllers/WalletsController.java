@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RestController
 @RequestMapping("/wallets")
 @RequiredArgsConstructor
-public class WalletController {
+public class WalletsController {
     private final WalletService walletService;
     private final TradeService tradeService;
 
