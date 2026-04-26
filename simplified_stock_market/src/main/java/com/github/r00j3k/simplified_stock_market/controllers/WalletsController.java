@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.github.r00j3k.simplified_stock_market.dtos.TradeRequest;
-import com.github.r00j3k.simplified_stock_market.dtos.WalletStocksResponse;
+import com.github.r00j3k.simplified_stock_market.dtos.TradeRequestDto;
+import com.github.r00j3k.simplified_stock_market.dtos.WalletStocksResponseDto;
 import com.github.r00j3k.simplified_stock_market.services.TradeService;
 import com.github.r00j3k.simplified_stock_market.services.WalletService;
 
@@ -27,14 +27,14 @@ public class WalletsController {
     public ResponseEntity<Void> trade(
         @PathVariable("wallet_id") String walletId,
         @PathVariable("stock_name") String stockName,
-        @Valid @RequestBody TradeRequest request
+        @Valid @RequestBody TradeRequestDto request
     ){
         tradeService.trade(walletId, stockName, request.type());
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{wallet_id}")
-    public ResponseEntity<WalletStocksResponse> getWalletStocks(
+    public ResponseEntity<WalletStocksResponseDto> getWalletStocks(
         @PathVariable("wallet_id") String walletId
     ){
         return ResponseEntity.ok(walletService.getWalletStocks(walletId));
