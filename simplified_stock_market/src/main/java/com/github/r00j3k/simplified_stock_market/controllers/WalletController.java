@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.github.r00j3k.simplified_stock_market.dtos.TradeRequest;
 import com.github.r00j3k.simplified_stock_market.dtos.WalletStocksResponse;
+import com.github.r00j3k.simplified_stock_market.services.TradeService;
 import com.github.r00j3k.simplified_stock_market.services.WalletService;
 
 import jakarta.validation.Valid;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 public class WalletController {
     private final WalletService walletService;
+    private final TradeService tradeService;
 
     @PostMapping("/{wallet_id}/stocks/{stock_name}")
     public ResponseEntity<Void> trade(
@@ -27,7 +29,7 @@ public class WalletController {
         @PathVariable("stock_name") String stockName,
         @Valid @RequestBody TradeRequest request
     ){
-        walletService.trade(walletId, stockName, request.type());
+        tradeService.trade(walletId, stockName, request.type());
         return ResponseEntity.ok().build();
     }
 
