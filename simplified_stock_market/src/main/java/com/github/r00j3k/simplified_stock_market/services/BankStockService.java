@@ -41,7 +41,7 @@ public class BankStockService {
             .stream()
             .map(
                 bs -> BankStock.builder()
-                    .stockName(bs.name())
+                    .stockName(bs.stockName())
                     .quantity(bs.quantity())
                     .build()
             )   

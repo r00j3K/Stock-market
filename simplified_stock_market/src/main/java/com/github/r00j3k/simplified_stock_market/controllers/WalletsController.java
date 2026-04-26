@@ -29,7 +29,7 @@ public class WalletsController {
         @PathVariable("stock_name") String stockName,
         @Valid @RequestBody TradeRequestDto request
     ){
-        tradeService.trade(walletId, stockName, request.type());
+        tradeService.trade(walletId, stockName, request.transactionType());
         return ResponseEntity.ok().build();
     }
 
