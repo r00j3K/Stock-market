@@ -23,9 +23,8 @@ public class WalletService {
             throw new WalletNotFoundException("Wallet not found.");
         }
 
-        var walletStocks = walletStockRepository.findAllByWalletStockIdWalletId(walletId);
-
-        List<StockList> stockList = walletStocks.stream()
+        List<StockList> stockList =  walletStockRepository.findAllByWalletStockIdWalletId(walletId)
+        .stream()
             .map(ws -> new StockList(
                 ws.getWalletStockId().getStockName(),
                 ws.getQuantity()
