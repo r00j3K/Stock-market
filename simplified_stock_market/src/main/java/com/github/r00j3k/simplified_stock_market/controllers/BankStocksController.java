@@ -6,10 +6,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.r00j3k.simplified_stock_market.dtos.BankStocksDto;
 import com.github.r00j3k.simplified_stock_market.services.BankStockService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 @RestController
@@ -18,9 +22,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class BankStocksController {
     private final BankStockService bankStockService;
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<BankStocksDto> getBankStocks() {
         return ResponseEntity.ok(bankStockService.getBankStocks());
     }
-    
+
+    @PostMapping
+    public ResponseEntity<Void> setBankStocks(
+        @Valid @RequestBody BankStocksDto bankStocksDto
+    ) {
+        bankStockService.setBankStocks(bankStocksDto);
+        return ResponseEntity.ok().build();
+    }
 }
