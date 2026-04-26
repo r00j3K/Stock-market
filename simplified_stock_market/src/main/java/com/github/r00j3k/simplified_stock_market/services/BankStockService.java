@@ -37,7 +37,7 @@ public class BankStockService {
     public void setBankStocks(BankStocksDto bankStocksDto){
         bankStockRepository.deleteAll();
 
-        List<BankStock> bankStocks = bankStocksDto.stocks()
+        List<BankStock> bankStocks = bankStocksDto.bankStocks()
             .stream()
             .map(
                 bs -> BankStock.builder()
