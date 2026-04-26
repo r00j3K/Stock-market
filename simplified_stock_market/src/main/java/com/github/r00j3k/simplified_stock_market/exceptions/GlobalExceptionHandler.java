@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
         return createResponse(HttpStatus.BAD_REQUEST, e.getMessage());
     }
 
-    // for handling validation errors in TradeRequest DTO
+    // for handling validation errors in DTOs
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleValidationErrors(MethodArgumentNotValidException e){
         return createResponse(HttpStatus.BAD_REQUEST, "Validation error.");
