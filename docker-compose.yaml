@@ -1,0 +1,9 @@
+services:
+  postgres:
+    image: 'postgres:latest'
+    environment:
+      - 'POSTGRES_DB=stock_market'
+      - 'POSTGRES_PASSWORD=stock_market_password'
+      - 'POSTGRES_USER=stock_market_user'
+    ports:
+      - '5432:5432'
