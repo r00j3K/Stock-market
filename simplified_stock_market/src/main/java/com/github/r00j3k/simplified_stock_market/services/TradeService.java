@@ -26,7 +26,6 @@ public class TradeService {
 
     @Transactional
     public void trade(String walletId, String stockName, TransactionType transactionType){
-
         switch(transactionType){
             case BUY -> buyStock(walletId, stockName);
             case SELL -> sellStock(walletId, stockName);
@@ -45,14 +44,13 @@ public class TradeService {
             
         bankStock.setQuantity(bankStock.getQuantity()-1);
         
-        Wallet wallet = walletRepository.findById(walletId)
-            .orElseGet(() ->
-                walletRepository.save(
-                    Wallet.builder()
-                        .walletId(walletId)
-                        .build()
-                )
+        if(!walletRepository.existsById(walletId)){
+            walletRepository.save(
+                Wallet.builder()
+                    .walletId(walletId)
+                    .build()
             );
+        }
 
             
         walletStockRepository.findByIdForUpdate(new WalletStockId((walletId), stockName))
