@@ -71,11 +71,16 @@ public class TradeService {
             .orElseThrow(() -> new StockNotFoundException("Stock not found."));
 
         // if the wallet of provided id does not exist, then there is no point of selling operation
-        walletRepository.findById(walletId)
-            .orElseThrow(() -> new WalletNotFoundException("Wallet not found."));
+        if (!walletRepository.existsById(walletId)) {
+            throw new WalletNotFoundException("Wallet not found.");
+        }
         
         var walletStock = walletStockRepository.findByIdForUpdate(new WalletStockId(walletId, stockName))
             .orElseThrow(() -> new StockNotAvailableException("This wallet does not possess this stock."));
+
+        if(walletStock.getQuantity() <= 0){
+            throw new StockNotAvailableException("This wallet does not possess this stock.");
+        }
 
         walletStock.setQuantity(walletStock.getQuantity()-1);
 
