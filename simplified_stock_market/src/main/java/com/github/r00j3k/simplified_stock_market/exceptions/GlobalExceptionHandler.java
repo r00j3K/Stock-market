@@ -26,7 +26,13 @@ public class GlobalExceptionHandler {
     // for handling validation errors in DTOs
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleValidationErrors(MethodArgumentNotValidException e){
-        return createResponse(HttpStatus.BAD_REQUEST, "Validation error.");
+        String detailedErrors = e.getBindingResult()
+            .getFieldErrors()
+            .stream()
+            .map(err -> err.getField() + " (" + err.getDefaultMessage() + ")")
+            .collect(java.util.stream.Collectors.joining(", "));
+
+        return createResponse(HttpStatus.BAD_REQUEST, "Validation failed: " + detailedErrors);
     }
 
     @ExceptionHandler(Exception.class)
