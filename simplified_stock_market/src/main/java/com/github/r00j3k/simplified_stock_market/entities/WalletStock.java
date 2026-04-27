@@ -28,13 +28,11 @@ public class WalletStock {
     private WalletStockId walletStockId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("walletId")
-    @JoinColumn(name = "wallet_id", nullable = false)
+    @JoinColumn(name = "wallet_id", referencedColumnName = "wallet_id", insertable = false, updatable = false)
     private Wallet wallet;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("stockName")
-    @JoinColumn(name = "stock_name", nullable = false)
+    @JoinColumn(name = "stock_name", referencedColumnName = "stock_name", insertable = false, updatable = false)
     private BankStock bankStock;
 
     @NotNull

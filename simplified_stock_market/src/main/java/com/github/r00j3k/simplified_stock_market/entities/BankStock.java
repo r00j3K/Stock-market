@@ -2,6 +2,8 @@ package com.github.r00j3k.simplified_stock_market.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
@@ -19,9 +21,13 @@ import lombok.*;
 @Builder
 public class BankStock {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "stock_id", nullable = false, updatable = false)
+    private Long stockId;
+
     @NotBlank
     @Size(max = 255)
-    @Column(name = "stock_name", length = 255, nullable = false, updatable = false)
+    @Column(name = "stock_name", length = 255, nullable = false, unique = true)
     private String stockName;
 
     @NotNull

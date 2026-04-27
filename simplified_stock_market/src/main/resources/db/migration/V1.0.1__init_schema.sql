@@ -7,7 +7,8 @@ CREATE TABLE wallets
 
 CREATE TABLE bank_stocks 
 (
-    stock_name VARCHAR(255) PRIMARY KEY,
+    stock_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    stock_name VARCHAR(255) UNIQUE,
     quantity BIGINT NOT NULL DEFAULT 0,
     CONSTRAINT chk_bank_stocks_quantity_non_negative CHECK (quantity >= 0)
 );
@@ -19,7 +20,7 @@ CREATE TABLE wallet_stocks
     quantity BIGINT NOT NULL,
     CONSTRAINT pk_wallet_stocks PRIMARY KEY (wallet_id, stock_name),
     CONSTRAINT fk_wallet_id_wallet_stock FOREIGN KEY(wallet_id) REFERENCES wallets(wallet_id),
-    CONSTRAINT fk_stock_name_wallet_stock FOREIGN KEY(stock_name) REFERENCES bank_stocks(stock_name),
+    CONSTRAINT fk_stock_name_bank_stock FOREIGN KEY(stock_name) REFERENCES bank_stocks(stock_name),
     CONSTRAINT chk_wallet_stocks_quantity_non_negative CHECK (quantity >= 0)
 );
 

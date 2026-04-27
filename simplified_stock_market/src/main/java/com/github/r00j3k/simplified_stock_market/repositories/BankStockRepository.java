@@ -1,5 +1,6 @@
 package com.github.r00j3k.simplified_stock_market.repositories;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,8 +12,10 @@ import com.github.r00j3k.simplified_stock_market.entities.BankStock;
 
 import jakarta.persistence.LockModeType;
 
-public interface BankStockRepository extends JpaRepository<BankStock, String> {
+public interface BankStockRepository extends JpaRepository<BankStock, Long> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT b FROM BankStock b WHERE b.stockName = :stockName")
-    Optional<BankStock> findByIdForUpdate(@Param("stockName") String stockName);
+    Optional<BankStock> findByStockNameForUpdate(@Param("stockName") String stockName);
+
+    List<BankStock> findAllByOrderByStockIdAsc();
 }

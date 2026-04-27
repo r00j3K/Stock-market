@@ -1,5 +1,6 @@
 package com.github.r00j3k.simplified_stock_market.services;
 
+import com.github.r00j3k.simplified_stock_market.repositories.WalletStockRepository;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -15,10 +16,11 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class BankStockService {
+    private final WalletStockRepository walletStockRepository;
     private final BankStockRepository bankStockRepository;
 
     public BankStocksDto getBankStocks(){
-        List<StockListDto> stocks = bankStockRepository.findAll()
+        List<StockListDto> stocks = bankStockRepository.findAllByOrderByStockIdAsc()
             .stream()
             .map(bs -> new StockListDto(
                     bs.getStockName(),
@@ -35,7 +37,12 @@ public class BankStockService {
     // and do not depend on the previous state of the records.
     @Transactional
     public void setBankStocks(BankStocksDto bankStocksDto){
-        bankStockRepository.deleteAll();
+        // first delete all records that reference stocks in current
+        walletStockRepository.deleteAllInBatch();
+        walletStockRepository.flush();
+
+        bankStockRepository.deleteAllInBatch();
+        bankStockRepository.flush();
 
         List<BankStock> bankStocks = bankStocksDto.bankStocks()
             .stream()

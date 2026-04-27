@@ -36,7 +36,7 @@ public class TradeService {
     }
 
     private void buyStock(String walletId, String stockName){
-        var bankStock = bankStockRepository.findByIdForUpdate(stockName)
+        var bankStock = bankStockRepository.findByStockNameForUpdate(stockName)
                 .orElseThrow(() -> new StockNotFoundException("Stock not found."));
             
         if(bankStock.getQuantity() == 0){
@@ -61,8 +61,6 @@ public class TradeService {
                 () -> walletStockRepository.save(
                     WalletStock.builder()
                     .walletStockId(new WalletStockId(walletId, stockName))
-                    .wallet(wallet)
-                    .bankStock(bankStock)
                     .quantity(1L)
                     .build()
                 )
@@ -71,7 +69,7 @@ public class TradeService {
 
     private void sellStock(String walletId, String stockName){
         // fetching bankStock and walletStock in the same order as in the butStock method to prevent deadlock
-        var bankStock = bankStockRepository.findByIdForUpdate(stockName)
+        var bankStock = bankStockRepository.findByStockNameForUpdate(stockName)
             .orElseThrow(() -> new StockNotFoundException("Stock not found."));
 
         // if the wallet of provided id does not exist, then there is no point of selling operation
