@@ -10,7 +10,6 @@ import com.github.r00j3k.simplified_stock_market.enums.TransactionType;
 import com.github.r00j3k.simplified_stock_market.exceptions.StockNotAvailableException;
 import com.github.r00j3k.simplified_stock_market.exceptions.StockNotFoundException;
 import com.github.r00j3k.simplified_stock_market.exceptions.WalletNotFoundException;
-import com.github.r00j3k.simplified_stock_market.exceptions.WrongTransactionTypeException;
 import com.github.r00j3k.simplified_stock_market.repositories.BankStockRepository;
 import com.github.r00j3k.simplified_stock_market.repositories.WalletRepository;
 import com.github.r00j3k.simplified_stock_market.repositories.WalletStockRepository;
@@ -26,14 +25,7 @@ public class TradeService {
     private final AuditLogService auditLogService;
 
     @Transactional
-    public void trade(String walletId, String stockName, String type){
-        TransactionType transactionType;
-        try{
-            transactionType = TransactionType.valueOf(type.toUpperCase());
-        }
-        catch(IllegalArgumentException e){
-            throw new WrongTransactionTypeException("Wrong transaction type, allowed values are: buy, sell");
-        }
+    public void trade(String walletId, String stockName, TransactionType transactionType){
 
         switch(transactionType){
             case BUY -> buyStock(walletId, stockName);
@@ -52,14 +44,16 @@ public class TradeService {
         }
             
         bankStock.setQuantity(bankStock.getQuantity()-1);
-
-        if(!walletRepository.existsById(walletId)){
-            walletRepository.save(
-                Wallet.builder()
-                .walletId(walletId)
-                .build()
+        
+        Wallet wallet = walletRepository.findById(walletId)
+            .orElseGet(() ->
+                walletRepository.save(
+                    Wallet.builder()
+                        .walletId(walletId)
+                        .build()
+                )
             );
-        }
+
             
         walletStockRepository.findByIdForUpdate(new WalletStockId((walletId), stockName))
             .ifPresentOrElse(
@@ -67,6 +61,8 @@ public class TradeService {
                 () -> walletStockRepository.save(
                     WalletStock.builder()
                     .walletStockId(new WalletStockId(walletId, stockName))
+                    .wallet(wallet)
+                    .bankStock(bankStock)
                     .quantity(1L)
                     .build()
                 )
