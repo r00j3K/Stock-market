@@ -54,6 +54,6 @@ public class BankStockService {
             )   
             .toList();
         
-            bankStockRepository.saveAll(bankStocks);
+        bankStockRepository.saveAll(bankStocks);
     }
 }
