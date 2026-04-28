@@ -1,9 +1,18 @@
 services:
   postgres:
     image: 'postgres:latest'
+    container_name: stock-db
     environment:
       - 'POSTGRES_DB=stock_market'
       - 'POSTGRES_PASSWORD=stock_market_password'
       - 'POSTGRES_USER=stock_market_user'
     ports:
       - '5432:5432'
+  
+  stock_market:
+    build: .
+    container_name: stock-app
+    depends_on:
+      - postgres
+    ports: '8080:8080'
+    
