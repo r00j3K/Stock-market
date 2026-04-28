@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 import com.github.r00j3k.simplified_stock_market.entities.WalletStockId;
+import com.github.r00j3k.simplified_stock_market.exceptions.StockNotFoundException;
 import com.github.r00j3k.simplified_stock_market.exceptions.WalletNotFoundException;
+import com.github.r00j3k.simplified_stock_market.repositories.BankStockRepository;
 import com.github.r00j3k.simplified_stock_market.repositories.WalletRepository;
 import com.github.r00j3k.simplified_stock_market.repositories.WalletStockRepository;
 import com.github.r00j3k.simplified_stock_market.dtos.StockListDto;
@@ -17,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 public class WalletService {
     private final WalletStockRepository walletStockRepository;
     private final WalletRepository walletRepository;
+    private final BankStockRepository bankStockRepository;
 
     public WalletStocksResponseDto getWalletStocks(String walletId){
         if(!walletRepository.existsById(walletId)){
@@ -24,9 +27,9 @@ public class WalletService {
         }
 
         List<StockListDto> stockList =  walletStockRepository.findAllByWalletStockIdWalletId(walletId)
-        .stream()
+            .stream()
             .map(ws -> new StockListDto(
-                ws.getWalletStockId().getStockName(),
+                ws.getBankStock().getStockName(),
                 ws.getQuantity()
             ))
             .toList();
@@ -39,7 +42,10 @@ public class WalletService {
             throw new WalletNotFoundException("Wallet not found.");
         }
 
-        return walletStockRepository.findById(new WalletStockId(walletId, stockName))
+        var bankStock = bankStockRepository.findByStockName(stockName)
+            .orElseThrow(() -> new StockNotFoundException("Stock not found"));
+
+        return walletStockRepository.findById(new WalletStockId(walletId, bankStock.getStockId()))
             .map(ws -> ws.getQuantity())
             .orElse(0L);
     }

@@ -32,7 +32,7 @@ public class WalletStock {
     private Wallet wallet;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "stock_name", referencedColumnName = "stock_name", insertable = false, updatable = false)
+    @JoinColumn(name = "stock_id", referencedColumnName = "stock_id", insertable = false, updatable = false)
     private BankStock bankStock;
 
     @NotNull

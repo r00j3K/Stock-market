@@ -16,11 +16,11 @@ CREATE TABLE bank_stocks
 CREATE TABLE wallet_stocks
 (
     wallet_id VARCHAR(255) NOT NULL,
-    stock_name VARCHAR(255) NOT NULL,
+    stock_id BIGINT NOT NULL,
     quantity BIGINT NOT NULL,
-    CONSTRAINT pk_wallet_stocks PRIMARY KEY (wallet_id, stock_name),
-    CONSTRAINT fk_wallet_id_wallet_stock FOREIGN KEY(wallet_id) REFERENCES wallets(wallet_id),
-    CONSTRAINT fk_stock_name_bank_stock FOREIGN KEY(stock_name) REFERENCES bank_stocks(stock_name),
+    CONSTRAINT pk_wallet_stocks PRIMARY KEY (wallet_id, stock_id),
+    CONSTRAINT fk_wallet_stocks_wallets_wallet_id FOREIGN KEY(wallet_id) REFERENCES wallets(wallet_id),
+    CONSTRAINT fk_wallet_stocks_bank_stocks_stock_id FOREIGN KEY(stock_id) REFERENCES bank_stocks(stock_id),
     CONSTRAINT chk_wallet_stocks_quantity_non_negative CHECK (quantity >= 0)
 );
 
@@ -33,3 +33,5 @@ CREATE TABLE audit_logs
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+-- to accelerate deletion of bank_stocks records
+CREATE INDEX idx_wallet_stocks_bank_stocks_stock_id on wallet_stocks(stock_id);

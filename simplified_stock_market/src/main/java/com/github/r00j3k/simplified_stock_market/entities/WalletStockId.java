@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
@@ -24,8 +23,7 @@ public class WalletStockId implements Serializable {
     @Column(name = "wallet_id", length = 255, nullable = false)
     private String walletId;
 
-    @NotBlank
-    @Size(max = 255)
-    @Column(name = "stock_name", length = 255, nullable = false)
-    private String stockName;
+    @NotNull
+    @Column(name = "stock_id", nullable = false)
+    private Long stockId;
 }

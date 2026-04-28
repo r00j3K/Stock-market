@@ -53,12 +53,12 @@ public class TradeService {
         }
 
             
-        walletStockRepository.findByIdForUpdate(new WalletStockId((walletId), stockName))
+        walletStockRepository.findByIdForUpdate(new WalletStockId(walletId, bankStock.getStockId()))
             .ifPresentOrElse(
                 ws -> ws.setQuantity(ws.getQuantity()+1),
                 () -> walletStockRepository.save(
                     WalletStock.builder()
-                    .walletStockId(new WalletStockId(walletId, stockName))
+                    .walletStockId(new WalletStockId(walletId, bankStock.getStockId()))
                     .quantity(1L)
                     .build()
                 )
@@ -75,7 +75,7 @@ public class TradeService {
             throw new WalletNotFoundException("Wallet not found.");
         }
         
-        var walletStock = walletStockRepository.findByIdForUpdate(new WalletStockId(walletId, stockName))
+        var walletStock = walletStockRepository.findByIdForUpdate(new WalletStockId(walletId, bankStock.getStockId()))
             .orElseThrow(() -> new StockNotAvailableException("This wallet does not possess this stock."));
 
         if(walletStock.getQuantity() <= 0){

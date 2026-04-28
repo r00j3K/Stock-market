@@ -18,4 +18,6 @@ public interface BankStockRepository extends JpaRepository<BankStock, Long> {
     Optional<BankStock> findByStockNameForUpdate(@Param("stockName") String stockName);
 
     List<BankStock> findAllByOrderByStockIdAsc();
+
+    Optional<BankStock> findByStockName(String stockName);
 }
