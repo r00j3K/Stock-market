@@ -31,3 +31,17 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Environment variables
+.env 
+.env.local
+
+# Logs 
+*.log
+logs/
+
+# Compiled Files
+*.class
+*.jar
+*.war
+*.ear
