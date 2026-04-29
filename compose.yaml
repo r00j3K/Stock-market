@@ -1,0 +1,61 @@
+services:
+  stock_db:
+    image: 'postgres:16-alpine'
+    container_name: stock-db
+    environment:
+      - 'POSTGRES_DB=stock_market'
+      - 'POSTGRES_PASSWORD=stock_market_password'
+      - 'POSTGRES_USER=stock_market_user'
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U stock_market_user -d stock_market"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  stock_market:
+    build:
+      context: ./simplified_stock_market 
+      dockerfile: Dockerfile
+    depends_on:
+      stock_db:
+        condition: service_healthy
+    environment:
+      - DB_URL=jdbc:postgresql://stock_db:5432/stock_market
+      - DB_USERNAME=stock_market_user
+      - DB_PASSWORD=stock_market_password
+    deploy:
+      replicas: 2
+      restart_policy: 
+        condition: on-failure
+        delay: 5s                 
+        max_attempts: 3           
+        window: 60s
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+  
+  nginx:
+    image: 'nginx:stable-alpine-slim'
+    container_name: nginx-lb
+    ports:
+     - "${APP_PORT:-8080}:80"
+    depends_on:
+      stock_market:
+        condition: service_healthy
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:80 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+       
+volumes:
+  db-data:
