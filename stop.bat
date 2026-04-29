@@ -10,5 +10,4 @@ if "%DELETE_VOLUME%"=="-v" (
     echo Stopping application...
     docker compose down
 )
-pause
 endlocal
