@@ -18,5 +18,4 @@ if "%MODE%"=="1" (
     echo Running in a detach mode...
     docker compose up --build -d
 )
-pause
 endlocal
