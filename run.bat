@@ -12,11 +12,11 @@ echo -------------------------------------------------------
 set MODE=%2
 
 if "%MODE%"=="1" (
-    echo Running in a detach mode...
-    docker compose up --build -d
-) else (
     echo Running in an interactive mode...
     docker compose up --build
+) else (
+    echo Running in a detach mode...
+    docker compose up --build -d
 )
 pause
 endlocal
