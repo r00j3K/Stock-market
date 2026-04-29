@@ -1,8 +1,8 @@
 #!/bin/bash
 
-DELETE=$1
+DELETE_VOLUME=$1
 
-if [ "$DELETE" == "1" ]; then
+if [ "$DELETE_VOLUME" == "-v" ]; then
     echo "Stopping application and deleting db volume..."
     docker compose down -v
 else 
