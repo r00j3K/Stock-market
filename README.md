@@ -67,18 +67,18 @@ To stop the application and remove containers, use the provided stop scripts.
 <br>
 
 > **⚠️ NOTE**: By default, the database volume is preserved. To perform a full reset (delete all wallets, bank state, and logs), use the `-v` flag:
-
-**Windows**
-```
-./stop.bat -v
-```
-<br>
-
-**Linux / macOS**
-```
-./stop.sh -v
-```
-
+>
+ >**Windows**
+> ```
+> ./stop.bat -v
+>```
+><br>
+>
+>**Linux / macOS**
+>```
+>./stop.sh -v
+>```
+><br/>
 # 🛠️ Tech Stack
 ### Core:
 
