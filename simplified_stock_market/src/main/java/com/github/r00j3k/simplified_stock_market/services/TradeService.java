@@ -70,11 +70,7 @@ public class TradeService {
             .orElseThrow(() -> new StockNotFoundException("Stock not found."));
 
         if (!walletRepository.existsById(walletId)) {
-            // creating wallet, even though the rollback is going to happen, to comply with task specification
-            walletRepository.save(Wallet.builder()
-                .walletId(walletId)
-                .build()
-            );
+            // Can't sell from a wallet that doesn't exist
             throw new StockNotAvailableException("This wallet does not possess this stock.");
         }
         
