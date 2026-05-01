@@ -9,7 +9,6 @@ import com.github.r00j3k.simplified_stock_market.entities.WalletStockId;
 import com.github.r00j3k.simplified_stock_market.enums.TransactionType;
 import com.github.r00j3k.simplified_stock_market.exceptions.StockNotAvailableException;
 import com.github.r00j3k.simplified_stock_market.exceptions.StockNotFoundException;
-import com.github.r00j3k.simplified_stock_market.exceptions.WalletNotFoundException;
 import com.github.r00j3k.simplified_stock_market.repositories.BankStockRepository;
 import com.github.r00j3k.simplified_stock_market.repositories.WalletRepository;
 import com.github.r00j3k.simplified_stock_market.repositories.WalletStockRepository;
@@ -70,9 +69,13 @@ public class TradeService {
         var bankStock = bankStockRepository.findByStockNameForUpdate(stockName)
             .orElseThrow(() -> new StockNotFoundException("Stock not found."));
 
-        // if the wallet of provided id does not exist, then there is no point of selling operation
         if (!walletRepository.existsById(walletId)) {
-            throw new WalletNotFoundException("Wallet not found.");
+            // creating wallet, even though the rollback is going to happen, to comply with task specification
+            walletRepository.save(Wallet.builder()
+                .walletId(walletId)
+                .build()
+            );
+            throw new StockNotAvailableException("This wallet does not possess this stock.");
         }
         
         var walletStock = walletStockRepository.findByIdForUpdate(new WalletStockId(walletId, bankStock.getStockId()))
